@@ -1,11 +1,9 @@
-import React from 'react';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
+import { Link } from 'remix';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, FilterIcon } from '@heroicons/react/solid';
 
 import classNames from '~/helpers/class-names';
-
-import MobileFilters from './MobileFilters';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -16,23 +14,14 @@ const sortOptions = [
 ];
 
 interface Props {
-  mobileFiltersOpen: boolean;
   setMobileFiltersOpen: (mobileFiltersOpen: boolean) => void;
 }
 
-const ProductSorting: React.FC<Props> = ({
-  mobileFiltersOpen,
-  setMobileFiltersOpen,
-}) => {
+const ProductSorting: React.FC<Props> = ({ setMobileFiltersOpen }) => {
   return (
     <div className='relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200'>
-      <MobileFilters
-        mobileFiltersOpen={mobileFiltersOpen}
-        setMobileFiltersOpen={setMobileFiltersOpen}
-      />
-
       <h1 className='text-4xl font-extrabold tracking-tight text-gray-900'>
-        New Arrivals
+        Current Catalog
       </h1>
 
       <div className='flex items-center'>
@@ -61,8 +50,8 @@ const ProductSorting: React.FC<Props> = ({
                 {sortOptions.map(option => (
                   <Menu.Item key={option.name}>
                     {({ active }) => (
-                      <a
-                        href={option.href}
+                      <Link
+                        to={option.href}
                         className={classNames(
                           option.current
                             ? 'font-medium text-gray-900'
@@ -72,7 +61,7 @@ const ProductSorting: React.FC<Props> = ({
                         )}
                       >
                         {option.name}
-                      </a>
+                      </Link>
                     )}
                   </Menu.Item>
                 ))}

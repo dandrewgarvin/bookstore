@@ -9,10 +9,7 @@ export default function BooksPage() {
 
   return (
     <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-      <ProductSorting
-        mobileFiltersOpen={mobileFiltersOpen}
-        setMobileFiltersOpen={setMobileFiltersOpen}
-      />
+      <ProductSorting setMobileFiltersOpen={setMobileFiltersOpen} />
 
       <section aria-labelledby='products-heading' className='pt-6 pb-24'>
         <h2 id='products-heading' className='sr-only'>
@@ -20,7 +17,10 @@ export default function BooksPage() {
         </h2>
 
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10'>
-          <Filters />
+          <Filters
+            mobileFiltersOpen={mobileFiltersOpen}
+            setMobileFiltersOpen={setMobileFiltersOpen}
+          />
 
           <Products />
         </div>

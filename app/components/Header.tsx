@@ -8,13 +8,13 @@ import {
   XIcon,
 } from '@heroicons/react/outline';
 
-import type IProducts from '~/types/Products';
+import type NProducts from '~/types/Products';
 
 import classNames from '~/helpers/class-names';
 
 interface NavigationProps {
-  categories: IProducts.Category[];
-  pages: IProducts.Page[];
+  categories: NProducts.Category[];
+  pages: NProducts.Page[];
 }
 
 const navigation: NavigationProps = {
