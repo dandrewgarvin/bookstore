@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   CheckIcon,
+  XIcon,
   QuestionMarkCircleIcon,
   StarIcon,
 } from '@heroicons/react/solid';
@@ -8,6 +9,8 @@ import { RadioGroup } from '@headlessui/react';
 import { ShieldCheckIcon } from '@heroicons/react/outline';
 
 import classNames from '~/helpers/class-names';
+
+import { Book } from '~/types/books';
 
 const product = {
   name: 'Everyday Ruck Snack',
@@ -30,42 +33,22 @@ const product = {
 };
 const reviews = { average: 4, totalCount: 1624 };
 
-export default function ProductDetails() {
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+interface Props {
+  product: Book;
+}
+const ProductDetails: React.FC<Props> = ({ product }) => {
+  product.discount = product.discount ?? 0;
+  const discounted = product.discount > 0;
+
+  const displayPrice = discounted
+    ? product.price - (product.price * product.discount) / 100
+    : product.price;
 
   return (
     <div className='bg-white'>
       <div className='max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-x-8'>
         {/* Product details */}
         <div className='lg:max-w-lg lg:self-end'>
-          <nav aria-label='Breadcrumb'>
-            <ol role='list' className='flex items-center space-x-2'>
-              {product.breadcrumbs.map((breadcrumb, breadcrumbIdx) => (
-                <li key={breadcrumb.id}>
-                  <div className='flex items-center text-sm'>
-                    <a
-                      href={breadcrumb.href}
-                      className='font-medium text-gray-500 hover:text-gray-900'
-                    >
-                      {breadcrumb.name}
-                    </a>
-                    {breadcrumbIdx !== product.breadcrumbs.length - 1 ? (
-                      <svg
-                        viewBox='0 0 20 20'
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='currentColor'
-                        aria-hidden='true'
-                        className='ml-2 flex-shrink-0 h-5 w-5 text-gray-300'
-                      >
-                        <path d='M5.555 17.776l8-16 .894.448-8 16-.894-.448z' />
-                      </svg>
-                    ) : null}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
           <div className='mt-4'>
             <h1 className='text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl'>
               {product.name}
@@ -78,9 +61,25 @@ export default function ProductDetails() {
             </h2>
 
             <div className='flex items-center'>
-              <p className='text-lg text-gray-900 sm:text-xl'>
-                {product.price}
-              </p>
+              <span className='flex'>
+                {discounted && (
+                  <p className='text-lg sm:text-xl text-red-400 line-through'>
+                    {new Intl.NumberFormat('en-US', {
+                      currency: 'USD',
+                      style: 'currency',
+                      currencyDisplay: 'symbol',
+                    }).format(product.price)}
+                  </p>
+                )}
+
+                <p className='ml-2 text-lg sm:text-xl text-gray-900'>
+                  {new Intl.NumberFormat('en-US', {
+                    currency: 'USD',
+                    style: 'currency',
+                    currencyDisplay: 'symbol',
+                  }).format(displayPrice)}
+                </p>
+              </span>
 
               <div className='ml-4 pl-4 border-l border-gray-300'>
                 <h2 className='sr-only'>Reviews</h2>
@@ -110,17 +109,33 @@ export default function ProductDetails() {
             </div>
 
             <div className='mt-4 space-y-6'>
-              <p className='text-base text-gray-500'>{product.description}</p>
+              <p className='text-base text-gray-500 whitespace-pre-line'>
+                {product.description}
+              </p>
             </div>
 
             <div className='mt-6 flex items-center'>
-              <CheckIcon
-                className='flex-shrink-0 w-5 h-5 text-green-500'
-                aria-hidden='true'
-              />
-              <p className='ml-2 text-sm text-gray-500'>
-                In stock and ready to ship
-              </p>
+              {product.available ? (
+                <>
+                  <CheckIcon
+                    className='flex-shrink-0 w-5 h-5 text-green-500'
+                    aria-hidden='true'
+                  />
+                  <p className='ml-2 text-sm text-gray-500'>
+                    In stock and ready to ship
+                  </p>
+                </>
+              ) : (
+                <>
+                  <XIcon
+                    className='flex-shrink-0 w-5 h-5 text-red-500'
+                    aria-hidden='true'
+                  />
+                  <p className='ml-2 text-sm text-gray-500'>
+                    Currently Unavailable
+                  </p>
+                </>
+              )}
             </div>
           </section>
         </div>
@@ -131,7 +146,7 @@ export default function ProductDetails() {
             <img
               src={product.imageSrc}
               alt={product.imageAlt}
-              className='w-full h-full object-center object-cover'
+              className='w-full h-full object-center object-contain'
             />
           </div>
         </div>
@@ -144,72 +159,11 @@ export default function ProductDetails() {
             </h2>
 
             <form>
-              <div className='sm:flex sm:justify-between'>
-                {/* Size selector */}
-                <RadioGroup value={selectedSize} onChange={setSelectedSize}>
-                  <RadioGroup.Label className='block text-sm font-medium text-gray-700'>
-                    Size
-                  </RadioGroup.Label>
-                  <div className='mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2'>
-                    {product.sizes.map(size => (
-                      <RadioGroup.Option
-                        as='div'
-                        key={size.name}
-                        value={size}
-                        className={({ active }) =>
-                          classNames(
-                            active ? 'ring-2 ring-indigo-500' : '',
-                            'relative block border border-gray-300 rounded-lg p-4 cursor-pointer focus:outline-none'
-                          )
-                        }
-                      >
-                        {({ active, checked }) => (
-                          <>
-                            <RadioGroup.Label
-                              as='p'
-                              className='text-base font-medium text-gray-900'
-                            >
-                              {size.name}
-                            </RadioGroup.Label>
-                            <RadioGroup.Description
-                              as='p'
-                              className='mt-1 text-sm text-gray-500'
-                            >
-                              {size.description}
-                            </RadioGroup.Description>
-                            <div
-                              className={classNames(
-                                active ? 'border' : 'border-2',
-                                checked
-                                  ? 'border-indigo-500'
-                                  : 'border-transparent',
-                                'absolute -inset-px rounded-lg pointer-events-none'
-                              )}
-                              aria-hidden='true'
-                            />
-                          </>
-                        )}
-                      </RadioGroup.Option>
-                    ))}
-                  </div>
-                </RadioGroup>
-              </div>
-              <div className='mt-4'>
-                <a
-                  href='#'
-                  className='group inline-flex text-sm text-gray-500 hover:text-gray-700'
-                >
-                  <span>What size should I buy?</span>
-                  <QuestionMarkCircleIcon
-                    className='flex-shrink-0 ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-500'
-                    aria-hidden='true'
-                  />
-                </a>
-              </div>
               <div className='mt-10'>
                 <button
                   type='submit'
-                  className='w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500'
+                  disabled={!product.available}
+                  className='w-full bg-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white disabled:text-gray-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500'
                 >
                   Add to bag
                 </button>
@@ -231,4 +185,6 @@ export default function ProductDetails() {
       </div>
     </div>
   );
-}
+};
+
+export default ProductDetails;

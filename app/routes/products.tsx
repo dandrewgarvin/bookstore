@@ -1,42 +1,24 @@
 import { useState } from 'react';
+import { useLoaderData } from 'remix';
+import type { LoaderFunction } from 'remix';
 
 import ProductSorting from '~/components/ProductSorting';
 import Products from '~/components/Products';
 import Filters from '~/components/Filters';
-import { Book } from '~/types/books';
+import BookService from '~/services/book-service';
 
-const products: Book[] = [
-  {
-    id: 1,
-    name: 'Multithreaded JavaScript',
-    price: 50,
-    discount: 0,
-    available: true,
-    imageSrc: 'https://learning.oreilly.com/library/cover/9781098104429/250w/',
-    imageAlt: 'Multithreaded Javascript book cover by O’Reilly Media',
-  },
-  {
-    id: 2,
-    name: 'Building Micro-frontends',
-    price: 140,
-    discount: 100,
-    available: false,
-    imageSrc: 'https://learning.oreilly.com/library/cover/9781492082989/250w/',
-    imageAlt: 'Building Micro-frontends book cover by O’Reilly Media',
-  },
-  {
-    id: 3,
-    name: 'The Art of Computer Programming',
-    price: 890,
-    discount: 95,
-    available: true,
-    imageSrc:
-      'https://images-na.ssl-images-amazon.com/images/I/81kQr9VRZCS.jpg',
-    imageAlt: 'The Art of Computer Programming book cover by Donald Knuth',
-  },
-];
+export let loader: LoaderFunction = () => {
+  const book_service = new BookService();
+
+  const books = book_service.getBooks();
+
+  return {
+    books,
+  };
+};
 
 export default function ProductsPage() {
+  const { books } = useLoaderData();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
@@ -54,7 +36,7 @@ export default function ProductsPage() {
             setMobileFiltersOpen={setMobileFiltersOpen}
           />
 
-          <Products products={products} />
+          <Products products={books} />
         </div>
       </section>
     </main>
