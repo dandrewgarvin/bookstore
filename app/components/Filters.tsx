@@ -6,48 +6,52 @@ import MobileFilters from './MobileFilters';
 
 const filters = [
   {
-    id: 'color',
-    name: 'Color',
+    id: 'genre',
+    name: 'Genre',
     options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
+      { value: 'computer-science', label: 'Computer Science', checked: true },
+      { value: 'mathematics', label: 'Mathematics', checked: true },
+      { value: 'security', label: 'Security', checked: true },
+      { value: 'compilers', label: 'Compilers', checked: true },
+      { value: 'networking', label: 'Networking', checked: true },
+      { value: 'software-design', label: 'Software Design', checked: true },
+      { value: 'testing', label: 'Testing', checked: true },
+      { value: 'philosophical', label: 'Philosophical', checked: true },
+      { value: 'non-fiction', label: 'Non-Fiction', checked: true },
+      { value: 'biography', label: 'Biography', checked: true },
+      { value: 'game-design', label: 'Game Design', checked: true },
+      { value: 'ethics-law', label: 'Software Ethics & Law', checked: true },
     ],
   },
   {
-    id: 'category',
-    name: 'Category',
+    id: 'author',
+    name: 'Author',
     options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
+      { value: 'knuth', label: 'Knuth', checked: false },
+      { value: 'martin', label: 'Martin', checked: false },
+      { value: 'kernighan', label: 'Kernighan', checked: false },
+      { value: 'lamport', label: 'Lamport', checked: false },
+      { value: 'beck', label: 'Beck', checked: false },
+      { value: 'aho', label: 'Aho', checked: false },
+      { value: 'ritchie', label: 'Ritchie', checked: false },
     ],
   },
   {
-    id: 'size',
-    name: 'Size',
+    id: 'language-environment',
+    name: 'Language / Environment',
     options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
+      {
+        value: 'model-checking',
+        label: 'Model Checking (TLA+)',
+        checked: false,
+      },
+      { value: 'unix', label: 'Unix', checked: false },
+      { value: 'clang', label: 'CLang', checked: false },
+      { value: 'javascript', label: 'JavaScript', checked: false },
+      { value: 'rust', label: 'Rust', checked: false },
+      { value: 'go', label: 'Go', checked: false },
     ],
   },
-];
-
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
 ];
 
 interface Props {
@@ -62,25 +66,13 @@ const Filters: React.FC<Props> = ({
     <>
       <MobileFilters
         filters={filters}
-        subCategories={subCategories}
+        subCategories={[]}
         mobileFiltersOpen={mobileFiltersOpen}
         setMobileFiltersOpen={setMobileFiltersOpen}
       />
 
       <form className='hidden lg:block'>
-        <h3 className='sr-only'>Categories</h3>
-        <ul
-          role='list'
-          className='text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200'
-        >
-          {subCategories.map(category => (
-            <li key={category.name}>
-              <Link to={category.href}>{category.name}</Link>
-            </li>
-          ))}
-        </ul>
-
-        {filters.map(section => (
+        {filters.map((section, index) => (
           <Disclosure
             as='div'
             key={section.id}
