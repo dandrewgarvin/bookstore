@@ -1,5 +1,4 @@
 import {
-  Link,
   Links,
   LiveReload,
   Meta,
@@ -9,6 +8,9 @@ import {
   useCatch,
 } from 'remix';
 import type { LinksFunction } from 'remix';
+
+import Header from '~/components/Header';
+import Footer from '~/components/Footer';
 
 import appStyles from '~/styles/app.css';
 
@@ -22,7 +24,11 @@ export let links: LinksFunction = () => {
 export default function App() {
   return (
     <Document>
+      <Header />
+
       <Outlet />
+
+      <Footer />
     </Document>
   );
 }
@@ -95,7 +101,7 @@ function Document({
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className='h-screen max-h-screen'>
         {children}
         <ScrollRestoration />
         <Scripts />

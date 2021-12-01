@@ -5,6 +5,8 @@ import { ChevronDownIcon, FilterIcon } from '@heroicons/react/solid';
 
 import classNames from '~/helpers/class-names';
 
+import MobileFilters from './MobileFilters';
+
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
   { name: 'Best Rating', href: '#', current: false },
@@ -14,12 +16,21 @@ const sortOptions = [
 ];
 
 interface Props {
+  mobileFiltersOpen: boolean;
   setMobileFiltersOpen: (mobileFiltersOpen: boolean) => void;
 }
 
-const ProductSorting: React.FC<Props> = ({ setMobileFiltersOpen }) => {
+const ProductSorting: React.FC<Props> = ({
+  mobileFiltersOpen,
+  setMobileFiltersOpen,
+}) => {
   return (
     <div className='relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200'>
+      <MobileFilters
+        mobileFiltersOpen={mobileFiltersOpen}
+        setMobileFiltersOpen={setMobileFiltersOpen}
+      />
+
       <h1 className='text-4xl font-extrabold tracking-tight text-gray-900'>
         New Arrivals
       </h1>
